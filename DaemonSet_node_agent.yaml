@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-agent
+spec:
+  selector:
+    matchLabels: app: node-agent
+  template:
+    metadata:
+      labels:
+        app: node-agent
+    spec:
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      hostNetwork: true
+      containers:
+      - name: agent
+        image: registry.example.com/agent:latest
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - { name: rootfs, mountPath: /host, readOnly: true }
+      volumes:
+      - { name: rootfs, hostPath: { path: / } }
