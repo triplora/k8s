@@ -1,0 +1,18 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eno1: { dhcp4: no }
+    eno2: { dhcp4: no }
+  bonds:
+    bond0:
+      interfaces: [eno1, eno2]
+      parameters: { mode: 802.3ad, mii-monitor-interval: 100 }
+      addresses: [ "10.10.50.12/24" ]
+      gateway4: 10.10.50.1
+      nameservers: { addresses: [10.10.50.10, 10.10.50.11] }
+  vlans:
+    vlan200:
+      id: 200
+      link: bond0
+      addresses: [ "10.200.0.10/24" ]
