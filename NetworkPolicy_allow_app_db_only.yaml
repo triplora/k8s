@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: app-egress-db
+spec:
+  podSelector:
+    matchLabels: app: web
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - namespaceSelector: { matchLabels: { name: "data" } }
+      podSelector: { matchLabels: role: db }
+    ports:
+    - { protocol: TCP, port: 5432 }
